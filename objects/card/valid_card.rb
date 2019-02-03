@@ -56,7 +56,8 @@ class ValidCard
       .gsub(/\D/, '') # remove non-digits
       .reverse # read from right to left
 
-    sum, i = 0, 0
+    sum = 0
+    i = 0
 
     number.each_char do |ch|
       n = ch.to_i
