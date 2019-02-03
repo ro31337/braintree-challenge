@@ -26,13 +26,13 @@ STDOUT.sync = true
 
 require_relative 'objects/input'
 require_relative 'objects/parser'
-require_relative 'objects/repository'
+require_relative 'objects/repo'
 require_relative 'objects/repo_sorted'
 
 input = Input.new
 parser = Parser.new
 repository = RepoSorted.new(
-  Repository.new
+  Repo.new
 )
 
 input.next do |line|

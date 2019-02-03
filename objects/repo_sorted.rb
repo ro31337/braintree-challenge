@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative 'repository'
+require_relative 'repo'
 require_relative '../lib/decorator'
 
 # Sorted repository decorator.

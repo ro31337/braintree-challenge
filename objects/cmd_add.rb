@@ -21,8 +21,8 @@
 # SOFTWARE.
 
 require 'bigdecimal'
-require_relative 'card/card'
-require_relative 'card/valid_card'
+require_relative 'card'
+require_relative 'card_valid'
 
 # Add command.
 # Author:: Roman Pushkin (roman.pushkin@gmail.com)
@@ -42,7 +42,7 @@ class CmdAdd
     m = line.match(CmdAdd::REGEX)
     CmdAdd.new(
       who: m[:who],
-      card: ValidCard.new(
+      card: CardValid.new(
         Card.new(
           m[:card],
           BigDecimal(m[:limit])

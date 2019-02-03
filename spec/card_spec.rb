@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../objects/card/card'
+require_relative '../objects/card'
 
 describe Card do
   subject { Card.new('12345', 100) }

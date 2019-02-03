@@ -20,60 +20,59 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'ostruct'
-require_relative '../objects/card/card'
-require_relative '../objects/repository'
+require_relative '../lib/decorator'
 
-describe Repository do
-  subject { Repository.new }
+# Valid card decorator.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+class CardValid
+  include Decorator
+  attr_reader :origin
 
-  let(:card) do
-    double(Card)
+  def initialize(origin)
+    @origin = origin
   end
 
-  before do
-    subject.register(
-      OpenStruct.new(
-        verb: :add,
-        who: 'foo',
-        card: card
-      )
-    )
+  def charge(amount)
+    return unless valid?
+    origin.charge(amount)
   end
 
-  it 'should register add command' do
-    expect(subject.db['foo']).to be
+  def credit(amount)
+    return unless valid?
+    origin.credit(amount)
   end
 
-  it 'should charge card on charge' do
-    expect(card).to receive(:charge).with(123).exactly(1)
-    subject.register(
-      OpenStruct.new(
-        verb: :charge,
-        who: 'foo',
-        balance: 123
-      )
-    )
+  def value
+    return 'error' unless valid?
+    origin.value
   end
 
-  it 'should credit card on credit' do
-    expect(card).to receive(:credit).with(123).exactly(1)
-    subject.register(
-      OpenStruct.new(
-        verb: :credit,
-        who: 'foo',
-        balance: 123
-      )
-    )
-  end
+  private
 
-  it 'should provide results' do
-    expectations = [{ expected_key: 'foo', expected_value: card }].lazy
-    expect(subject.results.size).to eq(1)
-    subject.results do |k, v|
-      e = expectations.next
-      expect(k).to eq(e[:expected_key])
-      expect(v).to eq(e[:expected_value])
+  def valid?
+    number = origin.number
+      .gsub(/\D/, '') # remove non-digits
+      .reverse # read from right to left
+
+    sum = 0
+    i = 0
+
+    number.each_char do |ch|
+      n = ch.to_i
+
+      # Step 1
+      n *= 2 if i.odd?
+
+      # Step 2
+      n = 1 + (n - 10) if n >= 10
+
+      sum += n
+      i   += 1
     end
+
+    # Step 3
+    (sum % 10).zero?
   end
 end

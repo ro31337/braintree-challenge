@@ -20,53 +20,36 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../objects/card/card'
-require_relative '../../objects/card/valid_card'
+# Repository.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+class Repo
+  attr_reader :db
 
-describe ValidCard do
-  subject { ValidCard.new(Card.new('12345', 100)) }
-
-  it 'should initialize' do
-    expect(subject.number).to eq('12345')
-    expect(subject.limit).to eq(100)
-    expect(subject.balance).to eq(0)
+  def initialize
+    @db = {}
   end
 
-  context 'when card is valid' do
-    let(:card) { ValidCard.new(Card.new('4111111111111111', 100)) }
-
-    it 'should credit' do
-      card.credit(5)
-      expect(card.balance).to eq(-5)
-    end
-
-    it 'should charge' do
-      card.charge(5)
-      expect(card.balance).to eq(5)
-    end
-
-    it 'should have value' do
-      card.charge(5)
-      expect(card.value).to eq('$5')
-    end
+  def register(command)
+    send(command.verb, command)
   end
 
-  context 'when card is not valid' do
-    let(:card) { ValidCard.new(Card.new('1234567890123456', 100)) }
+  def results(&block)
+    @db.each(&block)
+  end
 
-    it 'should not credit' do
-      card.credit(5)
-      expect(card.balance).to eq(0)
-    end
+  private
 
-    it 'should not charge' do
-      card.charge(5)
-      expect(card.balance).to eq(0)
-    end
+  def add(command)
+    @db[command.who] = command.card
+  end
 
-    it 'should not have value' do
-      card.charge(5)
-      expect(card.value).to eq('error')
-    end
+  def charge(command)
+    @db[command.who].charge(command.balance)
+  end
+
+  def credit(command)
+    @db[command.who].credit(command.balance)
   end
 end

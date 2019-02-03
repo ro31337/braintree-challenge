@@ -20,59 +20,53 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require_relative '../../lib/decorator'
+require_relative '../objects/card'
+require_relative '../objects/card_valid'
 
-# Valid card decorator.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class ValidCard
-  include Decorator
-  attr_reader :origin
+describe CardValid do
+  subject { CardValid.new(Card.new('12345', 100)) }
 
-  def initialize(origin)
-    @origin = origin
+  it 'should initialize' do
+    expect(subject.number).to eq('12345')
+    expect(subject.limit).to eq(100)
+    expect(subject.balance).to eq(0)
   end
 
-  def charge(amount)
-    return unless valid?
-    origin.charge(amount)
-  end
+  context 'when card is valid' do
+    let(:card) { CardValid.new(Card.new('4111111111111111', 100)) }
 
-  def credit(amount)
-    return unless valid?
-    origin.credit(amount)
-  end
-
-  def value
-    return 'error' unless valid?
-    origin.value
-  end
-
-  private
-
-  def valid?
-    number = origin.number
-      .gsub(/\D/, '') # remove non-digits
-      .reverse # read from right to left
-
-    sum = 0
-    i = 0
-
-    number.each_char do |ch|
-      n = ch.to_i
-
-      # Step 1
-      n *= 2 if i.odd?
-
-      # Step 2
-      n = 1 + (n - 10) if n >= 10
-
-      sum += n
-      i   += 1
+    it 'should credit' do
+      card.credit(5)
+      expect(card.balance).to eq(-5)
     end
 
-    # Step 3
-    (sum % 10).zero?
+    it 'should charge' do
+      card.charge(5)
+      expect(card.balance).to eq(5)
+    end
+
+    it 'should have value' do
+      card.charge(5)
+      expect(card.value).to eq('$5')
+    end
+  end
+
+  context 'when card is not valid' do
+    let(:card) { CardValid.new(Card.new('1234567890123456', 100)) }
+
+    it 'should not credit' do
+      card.credit(5)
+      expect(card.balance).to eq(0)
+    end
+
+    it 'should not charge' do
+      card.charge(5)
+      expect(card.balance).to eq(0)
+    end
+
+    it 'should not have value' do
+      card.charge(5)
+      expect(card.value).to eq('error')
+    end
   end
 end

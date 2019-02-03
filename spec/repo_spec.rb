@@ -20,36 +20,60 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Repository.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class Repository
-  attr_reader :db
+require 'ostruct'
+require_relative '../objects/card'
+require_relative '../objects/repo'
 
-  def initialize
-    @db = {}
+describe Repo do
+  subject { Repo.new }
+
+  let(:card) do
+    double(Card)
   end
 
-  def register(command)
-    send(command.verb, command)
+  before do
+    subject.register(
+      OpenStruct.new(
+        verb: :add,
+        who: 'foo',
+        card: card
+      )
+    )
   end
 
-  def results(&block)
-    @db.each(&block)
+  it 'should register add command' do
+    expect(subject.db['foo']).to be
   end
 
-  private
-
-  def add(command)
-    @db[command.who] = command.card
+  it 'should charge card on charge' do
+    expect(card).to receive(:charge).with(123).exactly(1)
+    subject.register(
+      OpenStruct.new(
+        verb: :charge,
+        who: 'foo',
+        balance: 123
+      )
+    )
   end
 
-  def charge(command)
-    @db[command.who].charge(command.balance)
+  it 'should credit card on credit' do
+    expect(card).to receive(:credit).with(123).exactly(1)
+    subject.register(
+      OpenStruct.new(
+        verb: :credit,
+        who: 'foo',
+        balance: 123
+      )
+    )
   end
 
-  def credit(command)
-    @db[command.who].credit(command.balance)
+  it 'should provide results' do
+    expectations = [{ expected_key: 'foo', expected_value: card }].lazy
+    expect(subject.results.size).to eq(1)
+    subject.results do |k, v|
+      e = expectations.next
+      expect(k).to eq(e[:expected_key])
+      expect(v).to eq(e[:expected_value])
+    end
   end
 end
