@@ -20,31 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'bigdecimal'
-require_relative 'card/card'
-require_relative 'card/valid_card'
+require_relative '../objects/cmd_add'
 
-# Add Command.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class CmdAdd
-  REGEX = /^Add\s(?<who>\w+)\s(?<card>\d+)\s\$(?<balance>\d+)/i.freeze
-  attr_reader :verb, :who, :card, :balance
-
-  def initialize(who:, card:, balance:)
-    @verb = :add
-    @who = who
-    @card = card
-    @balance = balance
+describe CmdAdd do
+  it 'should initialize' do
+    cmd = CmdAdd.new(who: 'foo', card: '12345', balance: 123)
+    expect(cmd.verb).to eq(:add)
+    expect(cmd.who).to eq('foo')
+    expect(cmd.card).to eq('12345')
+    expect(cmd.balance).to eq(123)
   end
 
-  def self.from(line)
-    m = line.match(CmdAdd::REGEX)
-    CmdAdd.new(
-      who: m[:who],
-      card: ValidCard.new(Card.new(m[:card])),
-      balance: BigDecimal(m[:balance])
-    )
+  it 'should build from string' do
+    cmd = CmdAdd.from('Add foo 12345 $123')
+    expect(cmd.verb).to eq(:add)
+    expect(cmd.who).to eq('foo')
+    expect(cmd.card.number).to eq('12345')
+    expect(cmd.balance).to eq(123)
   end
 end

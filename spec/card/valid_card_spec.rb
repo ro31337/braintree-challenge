@@ -20,31 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'bigdecimal'
-require_relative 'card/card'
-require_relative 'card/valid_card'
+require_relative '../../objects/card/card'
+require_relative '../../objects/card/valid_card'
 
-# Add Command.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class CmdAdd
-  REGEX = /^Add\s(?<who>\w+)\s(?<card>\d+)\s\$(?<balance>\d+)/i.freeze
-  attr_reader :verb, :who, :card, :balance
+describe ValidCard do
+  subject { ValidCard.new(Card.new('12345')) }
 
-  def initialize(who:, card:, balance:)
-    @verb = :add
-    @who = who
-    @card = card
-    @balance = balance
-  end
-
-  def self.from(line)
-    m = line.match(CmdAdd::REGEX)
-    CmdAdd.new(
-      who: m[:who],
-      card: ValidCard.new(Card.new(m[:card])),
-      balance: BigDecimal(m[:balance])
-    )
+  it 'should initialize' do
+    expect(subject.number).to eq('12345')
   end
 end

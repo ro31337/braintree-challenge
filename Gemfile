@@ -20,31 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'bigdecimal'
-require_relative 'card/card'
-require_relative 'card/valid_card'
+source 'https://rubygems.org'
+ruby '2.6.0'
 
-# Add Command.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class CmdAdd
-  REGEX = /^Add\s(?<who>\w+)\s(?<card>\d+)\s\$(?<balance>\d+)/i.freeze
-  attr_reader :verb, :who, :card, :balance
-
-  def initialize(who:, card:, balance:)
-    @verb = :add
-    @who = who
-    @card = card
-    @balance = balance
-  end
-
-  def self.from(line)
-    m = line.match(CmdAdd::REGEX)
-    CmdAdd.new(
-      who: m[:who],
-      card: ValidCard.new(Card.new(m[:card])),
-      balance: BigDecimal(m[:balance])
-    )
-  end
-end
+gem 'rspec'

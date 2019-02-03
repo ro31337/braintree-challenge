@@ -26,24 +26,24 @@
 # License:: MIT
 module Decorator
   def method_missing(method, *args)
-    if any_origin_in_chain_respond_to?(method, args)
+    if any_origin_in_chain_respond_to?(method)
       origin.send(method, *args)
     else
       super
     end
   end
 
-  def respond_to_missing?(method_name, *args)
-    any_origin_in_chain_respond_to?(method_name, args)
+  def respond_to_missing?(method_name, *_args)
+    any_origin_in_chain_respond_to?(method_name)
   end
 
   private
 
-  def any_origin_in_chain_respond_to?(method, current = origin, *args)
-    if current.respond_to?(method, args)
+  def any_origin_in_chain_respond_to?(method, current = origin)
+    if current.respond_to?(method)
       true
-    elsif current.respond_to?(:origin, args)
-      any_origin_in_chain_respond_to?(method, current.origin, args)
+    elsif current.respond_to?(:origin)
+      any_origin_in_chain_respond_to?(method, current.origin)
     else
       false
     end
