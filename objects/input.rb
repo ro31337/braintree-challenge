@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # frozen_string_literal: true
 
 # Copyright (c) 2019 Roman Pushkin
@@ -22,11 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-STDOUT.sync = true
-
-require_relative 'objects/input'
-
-input = Input.new
-input.next do |line|
-  puts line
+# Input.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+class Input
+  def next
+    yield 'one'
+    yield 'two'
+    yield 'three'
+  end
 end
