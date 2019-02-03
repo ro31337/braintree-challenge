@@ -38,5 +38,5 @@ input.next do |line|
 end
 
 repository.db.each do |who, card|
-  puts "#{who}: #{format('%.0f', card.balance)}"
+  puts "#{who}: #{card.value}"
 end

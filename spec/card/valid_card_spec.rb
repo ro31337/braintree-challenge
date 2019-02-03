@@ -24,11 +24,49 @@ require_relative '../../objects/card/card'
 require_relative '../../objects/card/valid_card'
 
 describe ValidCard do
-  subject { ValidCard.new(Card.new('12345', 123)) }
+  subject { ValidCard.new(Card.new('12345', 100)) }
 
   it 'should initialize' do
     expect(subject.number).to eq('12345')
-    expect(subject.limit).to eq(123)
+    expect(subject.limit).to eq(100)
     expect(subject.balance).to eq(0)
+  end
+
+  context 'when card is valid' do
+    let(:card) { ValidCard.new(Card.new('4111111111111111', 100)) }
+
+    it 'should credit' do
+      card.credit(5)
+      expect(card.balance).to eq(-5)
+    end
+
+    it 'should charge' do
+      card.charge(5)
+      expect(card.balance).to eq(5)
+    end
+
+    it 'should have value' do
+      card.charge(5)
+      expect(card.value).to eq('$5')
+    end
+  end
+
+  context 'when card is not valid' do
+    let(:card) { ValidCard.new(Card.new('1234567890123456', 100)) }
+
+    it 'should not credit' do
+      card.credit(5)
+      expect(card.balance).to eq(0)
+    end
+
+    it 'should not charge' do
+      card.charge(5)
+      expect(card.balance).to eq(0)
+    end
+
+    it 'should not have value' do
+      card.charge(5)
+      expect(card.value).to eq('error')
+    end
   end
 end

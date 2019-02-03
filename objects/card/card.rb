@@ -40,4 +40,8 @@ class Card
   def credit(amount)
     @balance -= amount
   end
+
+  def value
+    format('$%.0f', @balance)
+  end
 end

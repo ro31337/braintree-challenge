@@ -33,4 +33,45 @@ class ValidCard
   def initialize(origin)
     @origin = origin
   end
+
+  def charge(amount)
+    return unless valid?
+    origin.charge(amount)
+  end
+
+  def credit(amount)
+    return unless valid?
+    origin.credit(amount)
+  end
+
+  def value
+    return 'error' unless valid?
+    origin.value
+  end
+
+  private
+
+  def valid?
+    number = origin.number
+      .gsub(/\D/, '') # remove non-digits
+      .reverse # read from right to left
+
+    sum, i = 0, 0
+
+    number.each_char do |ch|
+      n = ch.to_i
+
+      # Step 1
+      n *= 2 if i.odd?
+
+      # Step 2
+      n = 1 + (n - 10) if n >= 10
+
+      sum += n
+      i   += 1
+    end
+
+    # Step 3
+    (sum % 10).zero?
+  end
 end

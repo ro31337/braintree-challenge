@@ -23,11 +23,37 @@
 require_relative '../../objects/card/card'
 
 describe Card do
-  subject { Card.new('12345', 123) }
+  subject { Card.new('12345', 100) }
 
   it 'should initialize' do
     expect(subject.number).to eq('12345')
-    expect(subject.limit).to eq(123)
+    expect(subject.limit).to eq(100)
     expect(subject.balance).to eq(0)
+  end
+
+  it 'should charge' do
+    subject.charge(5)
+    expect(subject.limit).to eq(100)
+    expect(subject.balance).to eq(5)
+  end
+
+  it 'should credit' do
+    subject.credit(5)
+    expect(subject.limit).to eq(100)
+    expect(subject.balance).to eq(-5)
+  end
+
+  it 'should not charge over limit' do
+    subject.charge(101)
+    expect(subject.limit).to eq(100)
+    expect(subject.balance).to eq(0)
+  end
+
+  it 'should calculate value' do
+    subject.charge(50)
+    subject.credit(20)
+    expect(subject.limit).to eq(100)
+    expect(subject.balance).to eq(30)
+    expect(subject.value).to eq('$30')
   end
 end
