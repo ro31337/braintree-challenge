@@ -20,27 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'bigdecimal'
+require_relative '../objects/cmd_credit'
 
-# Charge command.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class CmdCharge
-  REGEX = /^Charge\s(?<who>\w+)\s\$(?<balance>\d+)/i.freeze
-  attr_reader :verb, :who, :balance
-
-  def initialize(who:, balance:)
-    @verb = :charge
-    @who = who
-    @balance = balance
+describe CmdCredit do
+  it 'should initialize' do
+    cmd = CmdCredit.new(who: 'foo', balance: 123)
+    expect(cmd.verb).to eq(:credit)
+    expect(cmd.who).to eq('foo')
+    expect(cmd.balance).to eq(123)
   end
 
-  def self.from(line)
-    m = line.match(CmdCharge::REGEX)
-    CmdCharge.new(
-      who: m[:who],
-      balance: BigDecimal(m[:balance])
-    )
+  it 'should build from string' do
+    cmd = CmdCredit.from('Credit foo $123')
+    expect(cmd.verb).to eq(:credit)
+    expect(cmd.who).to eq('foo')
+    expect(cmd.balance).to eq(123)
   end
 end

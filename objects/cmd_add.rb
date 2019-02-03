@@ -24,7 +24,7 @@ require 'bigdecimal'
 require_relative 'card/card'
 require_relative 'card/valid_card'
 
-# Add Command.
+# Add command.
 # Author:: Roman Pushkin (roman.pushkin@gmail.com)
 # Copyright:: Copyright (c) 2019 Roman Pushkin
 # License:: MIT

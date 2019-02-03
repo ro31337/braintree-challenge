@@ -20,9 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'bigdecimal'
+
 # Credit command.
 # Author:: Roman Pushkin (roman.pushkin@gmail.com)
 # Copyright:: Copyright (c) 2019 Roman Pushkin
 # License:: MIT
 class CmdCredit
+  REGEX = /^Credit\s(?<who>\w+)\s\$(?<balance>\d+)/i.freeze
+  attr_reader :verb, :who, :balance
+
+  def initialize(who:, balance:)
+    @verb = :credit
+    @who = who
+    @balance = balance
+  end
+
+  def self.from(line)
+    m = line.match(CmdCredit::REGEX)
+    CmdCredit.new(
+      who: m[:who],
+      balance: BigDecimal(m[:balance])
+    )
+  end
 end
