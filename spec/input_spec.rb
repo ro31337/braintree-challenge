@@ -20,16 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Input.
-# Author:: Roman Pushkin (roman.pushkin@gmail.com)
-# Copyright:: Copyright (c) 2019 Roman Pushkin
-# License:: MIT
-class Input
-  def initialize(input = nil)
-    @input = input || ARGF
+require_relative '../objects/input'
+
+describe Input do
+  subject do
+    Input.new(
+      StringIO.new("one\ntwo\nthree\n")
+    )
   end
 
-  def next(&block)
-    @input.each(&block)
+  it 'should iterate' do
+    one_two_three = %w[one two three].lazy
+    subject.next do |line|
+      expect(line.chomp).to eq(one_two_three.next)
+    end
   end
 end
