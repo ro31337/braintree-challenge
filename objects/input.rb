@@ -26,8 +26,8 @@
 # License:: MIT
 class Input
   def next
-    yield 'one'
-    yield 'two'
-    yield 'three'
+    yield 'Add Tom 4111111111111111 $1000'
+    yield 'Add Lisa 5454545454545454 $3000'
+    yield 'Add Quincy 1234567890123456 $2000'
   end
 end

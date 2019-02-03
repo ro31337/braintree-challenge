@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # frozen_string_literal: true
 
 # Copyright (c) 2019 Roman Pushkin
@@ -22,18 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-STDOUT.sync = true
+require 'bigdecimal'
+require_relative 'card/card'
+require_relative 'card/valid_card'
 
-require_relative 'objects/input'
-require_relative 'objects/parser'
-require_relative 'objects/repository'
+# Add Command.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+class CmdAdd
+  REGEX = /^Add\s(?<who>\w+)\s(?<card>\d+)\s\$(?<balance>\d+)/i.freeze
+  attr_reader :verb, :who, :account, :balance
 
-input = Input.new
-parser = Parser.new
-repository = Repository.new
+  def initialize(who:, card:, balance:)
+    @verb = :add
+    @who = who
+    @card = card
+    @balance = balance
+  end
 
-input.next do |line|
-  command = parser.parse(line)
-  puts command
-  repository.register(command)
+  def self.from(line)
+    m = line.match(CmdAdd::REGEX)
+    CmdAdd.new(
+      who: m[:who],
+      card: ValidCard.new(Card.new(m[:card])),
+      balance: BigDecimal(m[:balance])
+    )
+  end
 end

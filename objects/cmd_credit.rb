@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # frozen_string_literal: true
 
 # Copyright (c) 2019 Roman Pushkin
@@ -22,18 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-STDOUT.sync = true
-
-require_relative 'objects/input'
-require_relative 'objects/parser'
-require_relative 'objects/repository'
-
-input = Input.new
-parser = Parser.new
-repository = Repository.new
-
-input.next do |line|
-  command = parser.parse(line)
-  puts command
-  repository.register(command)
+# Credit command.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+class CmdCredit
 end

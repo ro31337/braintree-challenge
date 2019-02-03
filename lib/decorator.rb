@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # frozen_string_literal: true
 
 # Copyright (c) 2019 Roman Pushkin
@@ -22,18 +20,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-STDOUT.sync = true
+# Decorator pattern for Ruby.
+# Author:: Roman Pushkin (roman.pushkin@gmail.com)
+# Copyright:: Copyright (c) 2019 Roman Pushkin
+# License:: MIT
+module Decorator
+  def method_missing(method, *args)
+    if any_origin_in_chain_respond_to?(method, args)
+      origin.send(method, *args)
+    else
+      super
+    end
+  end
 
-require_relative 'objects/input'
-require_relative 'objects/parser'
-require_relative 'objects/repository'
+  def respond_to_missing?(method_name, *args)
+    any_origin_in_chain_respond_to?(method_name, args)
+  end
 
-input = Input.new
-parser = Parser.new
-repository = Repository.new
+  private
 
-input.next do |line|
-  command = parser.parse(line)
-  puts command
-  repository.register(command)
+  def any_origin_in_chain_respond_to?(method, current = origin, *args)
+    if current.respond_to?(method, args)
+      true
+    elsif current.respond_to?(:origin, args)
+      any_origin_in_chain_respond_to?(method, current.origin, args)
+    else
+      false
+    end
+  end
 end
