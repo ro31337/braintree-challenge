@@ -25,8 +25,19 @@
 # Copyright:: Copyright (c) 2019 Roman Pushkin
 # License:: MIT
 class Card
-  attr_reader :number
-  def initialize(number)
+  attr_reader :number, :limit, :balance
+
+  def initialize(number, limit)
     @number = number
+    @limit = limit
+    @balance = 0
+  end
+
+  def charge(amount)
+    @balance += amount if (@balance + amount) <= limit
+  end
+
+  def credit(amount)
+    @balance -= amount
   end
 end

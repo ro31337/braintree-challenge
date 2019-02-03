@@ -34,6 +34,9 @@ repository = Repository.new
 
 input.next do |line|
   command = parser.parse(line)
-  puts command
   repository.register(command)
+end
+
+repository.db.each do |who, card|
+  puts "#{who}: #{format('%.0f', card.balance)}"
 end

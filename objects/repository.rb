@@ -25,7 +25,27 @@
 # Copyright:: Copyright (c) 2019 Roman Pushkin
 # License:: MIT
 class Repository
+  attr_reader :db
+
+  def initialize
+    @db = {}
+  end
+
   def register(command)
-    puts "Got #{command.verb} command"
+    send(command.verb, command)
+  end
+
+  private
+
+  def add(command)
+    @db[command.who] = command.card
+  end
+
+  def charge(command)
+    @db[command.who].charge(command.balance)
+  end
+
+  def credit(command)
+    @db[command.who].credit(command.balance)
   end
 end

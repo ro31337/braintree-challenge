@@ -24,11 +24,10 @@ require_relative '../objects/cmd_add'
 
 describe CmdAdd do
   it 'should initialize' do
-    cmd = CmdAdd.new(who: 'foo', card: '12345', balance: 123)
+    cmd = CmdAdd.new(who: 'foo', card: 'object')
     expect(cmd.verb).to eq(:add)
     expect(cmd.who).to eq('foo')
-    expect(cmd.card).to eq('12345')
-    expect(cmd.balance).to eq(123)
+    expect(cmd.card).to eq('object')
   end
 
   it 'should build from string' do
@@ -36,6 +35,6 @@ describe CmdAdd do
     expect(cmd.verb).to eq(:add)
     expect(cmd.who).to eq('foo')
     expect(cmd.card.number).to eq('12345')
-    expect(cmd.balance).to eq(123)
+    expect(cmd.card.limit).to eq(123)
   end
 end

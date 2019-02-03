@@ -29,5 +29,10 @@ class Input
     yield 'Add Tom 4111111111111111 $1000'
     yield 'Add Lisa 5454545454545454 $3000'
     yield 'Add Quincy 1234567890123456 $2000'
+    yield 'Charge Tom $500'
+    yield 'Charge Tom $800'
+    yield 'Charge Lisa $7'
+    yield 'Credit Lisa $100'
+    yield 'Credit Quincy $200'
   end
 end

@@ -24,9 +24,11 @@ require_relative '../../objects/card/card'
 require_relative '../../objects/card/valid_card'
 
 describe ValidCard do
-  subject { ValidCard.new(Card.new('12345')) }
+  subject { ValidCard.new(Card.new('12345', 123)) }
 
   it 'should initialize' do
     expect(subject.number).to eq('12345')
+    expect(subject.limit).to eq(123)
+    expect(subject.balance).to eq(0)
   end
 end
