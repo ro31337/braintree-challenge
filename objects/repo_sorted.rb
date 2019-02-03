@@ -20,36 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Repository.
+require_relative 'repository'
+require_relative '../lib/decorator'
+
+# Sorted repository decorator.
 # Author:: Roman Pushkin (roman.pushkin@gmail.com)
 # Copyright:: Copyright (c) 2019 Roman Pushkin
 # License:: MIT
-class Repository
-  attr_reader :db
+class RepoSorted
+  include Decorator
+  attr_reader :origin
 
-  def initialize
-    @db = {}
+  def initialize(origin)
+    @origin = origin
   end
 
-  def register(command)
-    send(command.verb, command)
-  end
-
-  def results(&block)
-    @db.each(&block)
-  end
-
-  private
-
-  def add(command)
-    @db[command.who] = command.card
-  end
-
-  def charge(command)
-    @db[command.who].charge(command.balance)
-  end
-
-  def credit(command)
-    @db[command.who].credit(command.balance)
+  def results(&_block)
+    keys = origin.db.keys.sort
+    keys.each do |key|
+      value = origin.db[key]
+      yield key, value
+    end
   end
 end

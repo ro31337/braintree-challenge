@@ -27,16 +27,19 @@ STDOUT.sync = true
 require_relative 'objects/input'
 require_relative 'objects/parser'
 require_relative 'objects/repository'
+require_relative 'objects/repo_sorted'
 
 input = Input.new
 parser = Parser.new
-repository = Repository.new
+repository = RepoSorted.new(
+  Repository.new
+)
 
 input.next do |line|
   command = parser.parse(line)
   repository.register(command)
 end
 
-repository.db.each do |who, card|
+repository.results do |who, card|
   puts "#{who}: #{card.value}"
 end

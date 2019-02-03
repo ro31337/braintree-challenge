@@ -66,4 +66,14 @@ describe Repository do
       )
     )
   end
+
+  it 'should provide results' do
+    expectations = [{ expected_key: 'foo', expected_value: card }].lazy
+    expect(subject.results.size).to eq(1)
+    subject.results do |k, v|
+      e = expectations.next
+      expect(k).to eq(e[:expected_key])
+      expect(v).to eq(e[:expected_value])
+    end
+  end
 end
