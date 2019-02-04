@@ -8,14 +8,16 @@ information.
 From console:
 
 ```
-$ ./app.rb input.txt
+$ ./app.rb sample.txt
 ```
 
 or
 
 ```
-$ ./app.rb < input.txt
+$ ./app.rb < sample.txt
 ```
+
+`sample.txt` is included.
 
 # Tests
 
