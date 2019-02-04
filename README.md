@@ -19,6 +19,29 @@ $ ./app.rb < sample.txt
 
 `sample.txt` is included.
 
+# Run with Docker
+
+If you have issues running the app or want to run it isolated, you can run it with Docker:
+
+#### Update sample
+
+Update `sample.txt` to your input
+
+#### Execute
+
+Execute:
+
+```
+$ docker build -t roman_pushkin_braintree .
+$ docker run -it --name roman_pushkin_braintree roman_pushkin_braintree
+```
+
+#### Cleanup
+
+```
+docker rm roman_pushkin_braintree
+```
+
 # Tests
 
 To run tests:
